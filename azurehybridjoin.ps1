@@ -5,13 +5,6 @@
 # ------------------------------------------
 # Run this script as an administrator
 
-# Define log file
-$LogFile = "C:\Windows\Logs\setup.log"
-
-# Start transcript for logging
-Start-Transcript -Path $LogFile -Append
-
-
 $MaxRetries = 10
 $RetryInterval = 120 # in seconds
 
@@ -69,18 +62,6 @@ if ($Joined) {
     Exit 0
 } else {
     Write-Output "Error: Failed to join the device to Azure AD after $MaxRetries attempts." -ForegroundColor Red
-    
-    # Set flag indicating enrollment failure
-    $flagFilePath = "C:\Scripts\azurejoinfailed.txt"
-    $flagContent = "Device is NOT Azure AD Joined"
-    try {
-        if (-not (Test-Path -Path (Split-Path -Path $flagFilePath -Parent))) {
-            New-Item -ItemType Directory -Path (Split-Path -Path $flagFilePath -Parent) -Force
-        }
-        Set-Content -Path $flagFilePath -Value $flagContent
-    } catch {
-        Write-Output "Error: Failed to write the flag file. $_"
-    }
     Exit 1
 }
 exit
